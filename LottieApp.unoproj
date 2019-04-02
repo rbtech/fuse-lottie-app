@@ -1,0 +1,16 @@
+{
+  "RootNamespace":"",
+  "Packages": [
+    "Fuse",
+    "FuseJS"
+  ],
+  "Includes": [
+    "*",
+    "Assets/Fonts/*.otf:Bundle",
+    "Assets/Animations/*.json:Bundle"
+  ],
+  "Projects": [
+    "Projects/Fuse-Cocoapods/cocoapods_include.unoproj",
+    "Projects/Fuse-Lottie/Lottie.unoproj"
+  ]
+}

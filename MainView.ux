@@ -1,0 +1,164 @@
+<App>
+	<Android.StatusBarConfig Color="#0000" IsVisible="false" />
+	<iOS.StatusBarConfig IsVisible="false" />
+	
+	<Font File="Assets/Fonts/iconmonstr-iconic-font.ttf" ux:Global="Iconic" />
+	
+	<string ux:Global="btns.play" ux:Value="&#xe03d;" />
+	<string ux:Global="btns.pause" ux:Value="&#xe03e;" />
+	<string ux:Global="btns.stop" ux:Value="&#xe03f;" />
+	<string ux:Global="btns.loop" ux:Value="&#xe043;" />
+	<string ux:Global="btns.autoReverseAnimation" ux:Value="&#xe114;" />
+	
+	<JavaScript>
+		
+		var Observable = require('FuseJS/Observable');
+		var Environment = require('FuseJS/Environment');
+		
+		var animationCounter = 0;
+		var animations = [
+			'Assets/Animations/Check Mark Success Data.json',
+			'Assets/Animations/427-happy-birthday.json',
+		];
+		
+		var urlToJSON = new Observable('Assets/Animations/Check Mark Success Data.json');
+		
+		function changeAnimation() {
+			
+			animationCounter += 1;
+			
+			if (animationCounter >= animations.length) {
+				animationCounter = 0;
+			}
+			
+			urlToJSON.value = animations[animationCounter];
+			
+		}
+		
+		
+		var isAnimationPlaying = Observable(false); //need to do via JS
+		
+		var contentMode = Observable("scaleaspectfit");
+		var loopAnimation = Observable(false);
+		var autoReverseAnimation = Observable(false);
+		var play = Observable(false);
+		var pause = Observable(false);
+		var stop = Observable(false);
+		var progress = Observable(0);
+		var isDefaultPlay = true;
+		
+		var animationCompleted = Observable(false);
+		animationCompleted.onValueChanged(module, function(val){
+			
+			if (isDefaultPlay) {
+				isDefaultPlay = false;
+			} else {
+				play.value = !val;
+			}
+			
+		});
+		
+		function toggleLoop() {
+			loopAnimation.value = !loopAnimation.value;
+		}
+		
+		function toggleAutoReverseAnimation() {
+			autoReverseAnimation.value = !autoReverseAnimation.value;
+		}
+		
+		function playAnimation() {
+			play.value = true;
+		}
+
+		function pauseAnimation() {
+			pause.value = true;
+		}
+
+		function stopAnimation() {
+			stop.value = true;
+		}
+		
+
+		module.exports = {
+			urlToJSON,
+			contentMode,
+			loopAnimation,
+			autoReverseAnimation,
+			play,
+			pause,
+			stop,
+			progress,
+
+			changeAnimation,
+			playAnimation,
+			pauseAnimation,
+			stopAnimation,
+			toggleLoop,
+			toggleAutoReverseAnimation,
+
+			animationCompleted,
+		};
+	</JavaScript>
+	<ScrollView>
+		<StackPanel Margin="0,20">
+			<NativeViewHost Width="100%" Height="320">
+				<RBT.Animation.Lottie ux:Name="myPlayer" File="{urlToJSON}" ContentMode="{contentMode}" LoopAnimation="{loopAnimation}" Play="{play}" Pause="{pause}" Stop="{stop}" Progress="{progress}" AutoReverseAnimation="{autoReverseAnimation}" AnimationCompleted="{animationCompleted}" />
+			</NativeViewHost>
+			<StackPanel Dock="Bottom" Padding="20">
+				<StackPanel Alignment="Center" Orientation="Horizontal" Margin="20,0,0,0">
+					<ControlButton ux:Name="playBtn" Icon="{Resource btns.play}" Clicked="{playAnimation}"/>
+					<ControlButton ux:Name="pauseBtn" Icon="{Resource btns.pause}" Clicked="{pauseAnimation}"/>
+					<ControlButton ux:Name="stopBtn" Icon="{Resource btns.stop}" Clicked="{stopAnimation}"/>
+					<ControlButton ux:Name="loopBtn" Icon="{Resource btns.loop}" Clicked="{toggleLoop}"/>
+					<ControlButton ux:Name="autoReverseAnimationBtn" Icon="{Resource btns.autoReverseAnimation}" Clicked="{toggleAutoReverseAnimation}"/>
+
+					<WhileTrue Value="{autoReverseAnimation}">
+						<Change autoReverseAnimationBtn.TextColor="#ffffff" />
+						<Change autoReverseAnimationBtn.BackgroundColor="#1188ff" />
+					</WhileTrue>
+					<WhileTrue Value="{play}">
+						<Change playBtn.TextColor="#ffffff" />
+						<Change playBtn.BackgroundColor="#1188ff" />
+					</WhileTrue>
+					<WhileTrue Value="{pause}">
+						<Change pauseBtn.TextColor="#ffffff" />
+						<Change pauseBtn.BackgroundColor="#1188ff" />
+					</WhileTrue>
+					<WhileTrue Value="{stop}">
+						<Change stopBtn.TextColor="#ffffff" />
+						<Change stopBtn.BackgroundColor="#1188ff" />
+					</WhileTrue>
+					<WhileTrue Value="{loopAnimation}">
+						<Change loopBtn.TextColor="#ffffff" />
+						<Change loopBtn.BackgroundColor="#1188ff" />
+					</WhileTrue>
+				</StackPanel>
+
+				<Slider Value="{progress}" Minimum="0" Maximum="1" Padding="20, 30" />
+
+				<Text FontSize="12" Value="File: {urlToJSON}" Padding="5" />
+				<iOS>
+					<Text FontSize="12" Value="iOS Content Mode: {contentMode}" Padding="5" />
+					<Text FontSize="12" Value="iOS Auto Reverse Animation: {autoReverseAnimation}" Padding="5" />
+				</iOS>
+
+				<Button Dock="Bottom" Text="SWITCH ANIMATION" Clicked="{changeAnimation}" Padding="20"/>
+
+			</StackPanel>
+		</StackPanel>
+	</ScrollView>
+	
+	<Panel ux:Class="ControlButton" Padding="16,14" Margin="0,0,5,0" HitTestMode="LocalBounds" TextColor="#1188ff" BorderColor="#1188ff" BackgroundColor="#ffffff">
+		<string ux:Property="Icon" />
+		<string ux:Property="TextColor" />
+		<string ux:Property="BorderColor" />
+		<string ux:Property="BackgroundColor" />
+
+		<Text FontSize="14" Value="{ReadProperty Icon}" Color="{Property TextColor}" Font="Iconic" />
+		<Rectangle Layer="Background" Color="{Property BackgroundColor}" CornerRadius="7">
+			<Stroke Width="1" Color="{Property BorderColor}" />
+		</Rectangle>
+	</Panel>
+</App>
+
+	

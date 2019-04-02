@@ -1,0 +1,7 @@
+<Package>
+	<Extensions Backend="CPlusPlus" Condition="iOS">
+	    <ProcessFile Name="run.sh" TargetName="run.sh" />
+	    <ProcessFile Name="build.sh" TargetName="build.sh" />
+	    <ProcessFile Name="Podfile" TargetName="Podfile" />
+	</Extensions>
+</Package>
