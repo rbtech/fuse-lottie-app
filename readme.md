@@ -1,4 +1,4 @@
-# [Fuse-Lottie](https://cnn.com) Example App
+# [Fuse-Lottie](https://github.com/rbtech/fuse-lottie) Example App
 
 Just build and run:
 `fuse build t=ios --run`
